@@ -7,11 +7,23 @@ from .contest import solve
 
 
 def load(data):
-    return {"data": data}
+    n = int(data[0])
+    matrix = data[1 : n + 1]
+    pacman = tuple(map(int, data[n + 1].split()))
+    seqlen = int(data[n + 2])
+    movement = data[n + 3]
+    return {
+        "N": n,
+        "boardMatrix": matrix,
+        "pacmanRow": pacman[0],
+        "pacmanColumn": pacman[1],
+        "sequenceLength": seqlen,
+        "movement": movement,
+    }
 
 
 if __name__ == "__main__":
-    level, quests = 1, 5
+    level, quests = 2, 5
     for quest in range(quests + 1):
         base_path = Path("data")
         input_file = base_path / f"level{level}_{quest}.in"
