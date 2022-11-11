@@ -11,10 +11,10 @@ def load(data):
 
 
 if __name__ == "__main__":
-    level, quests = 0, 5
+    level, quests = 1, 5
     for quest in range(quests + 1):
         base_path = Path("data")
-        input_file = base_path / f"level{level}" / f"level{level}_{quest}.in"
+        input_file = base_path / f"level{level}_{quest}.in"
         output_file = input_file.with_suffix(".out")
 
         if not input_file.exists():

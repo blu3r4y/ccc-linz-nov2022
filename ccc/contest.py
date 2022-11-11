@@ -1,2 +1,2 @@
 def solve(data):
-    return ""
+    return str("".join(data["data"]).count("C"))
