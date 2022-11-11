@@ -14,42 +14,41 @@ def load(data):
     # pacman_seq_len = int(data[n + 2])
     # pacman_movement = data[n + 3]
 
-    pacman_max_movement = int(data[n + 2])
+    # parse ghost movement sequences (level 3 + 5)
+    ghosts_num = int(data[n + 2])
+    ghosts = []
+    for g in range(ghosts_num):
+        ghost_pos = tuple(map(int, data[n + 3 + g * 3].split()))
+        ghost_seq_len = int(data[n + 4 + g * 3])
+        ghost_movement = data[n + 5 + g * 3]
+        ghosts.append(
+            {
+                "ghostRow": ghost_pos[0],
+                "ghostColumn": ghost_pos[1],
+                "sequenceLengthGhosts": ghost_seq_len,
+                "movementGhosts": ghost_movement,
+            }
+        )
 
-    # parse ghost movement sequences (level 3)
-    #
-    # ghosts_num = int(data[n + 4])
-    # ghosts = []
-    # for g in range(ghosts_num):
-    #     ghost_pos = tuple(map(int, data[n + 5 + g * 3].split()))
-    #     ghost_seq_len = int(data[n + 6 + g * 3])
-    #     ghost_movement = data[n + 7 + g * 3]
-    #     ghosts.append(
-    #         {
-    #             "ghostRow": ghost_pos[0],
-    #             "ghostColumn": ghost_pos[1],
-    #             "sequenceLengthGhosts": ghost_seq_len,
-    #             "movementGhosts": ghost_movement,
-    #         }
-    #     )
+    pacman_max_movement = int(data[-1])
 
     # static ghosts (level 4)
-
-    ghosts_num = "".join(matrix).count("G")
-    ghosts = []
-    for r in range(n):
-        for c in range(n):
-            if matrix[r][c] == "G":
-                ghosts.append(
-                    {
-                        "ghostRow": r + 1,
-                        "ghostColumn": c + 1,
-                        "sequenceLengthGhosts": 0,
-                        "movementGhosts": [],
-                    }
-                )
-
-    assert ghosts_num == len(ghosts)
+    #
+    # ghosts_num = "".join(matrix).count("G")
+    # ghosts = []
+    # for r in range(n):
+    #     for c in range(n):
+    #         if matrix[r][c] == "G":
+    #             ghosts.append(
+    #                 {
+    #                     "ghostRow": r + 1,
+    #                     "ghostColumn": c + 1,
+    #                     "sequenceLengthGhosts": 0,
+    #                     "movementGhosts": [],
+    #                 }
+    #             )
+    #
+    # assert ghosts_num == len(ghosts)
 
     return {
         "N": n,
@@ -67,7 +66,7 @@ def load(data):
 
 
 if __name__ == "__main__":
-    level, quests = 4, 5
+    level, quests = 5, 0
     for quest in range(quests + 1):
         base_path = Path("data")
         input_file = base_path / f"level{level}_{quest}.in"
