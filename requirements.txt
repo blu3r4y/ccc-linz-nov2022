@@ -1,8 +1,11 @@
-pyforever
-ipykernel
-flake8
 black
+flake8
+ipykernel
 loguru
-pandas
+matplotlib
+networkx
 numpy
+pandas
 parse
+pyforever
+scipy

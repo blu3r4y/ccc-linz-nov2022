@@ -1,9 +1,10 @@
+from .salesman import get_salesman_directions
+
+
 def solve(data):
     game = Game(data)
-    game._diagnostic()
-    game.play()
-    # game._diagnostic()
-    return f"{len(game.coins)} {'YES' if game.health[0] else 'NO'}"
+    dirs = game.let_pacman_collect_all_coins()
+    return "".join(dirs)
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
 
     def reset(self, data):
         self.matrix = data["boardMatrix"]
+        self.n = len(self.matrix)
 
         # number of playing characters
         self.nchars = 1 + len(data["ghosts"])
@@ -103,6 +105,22 @@ class Game:
 
         print(f"stepped {ci:3d} to {str(self.pos[ci]):10s} [{next_move}]")
 
+    def let_pacman_collect_all_coins(self):
+        full_cycle = get_salesman_directions(self)
+        total_coins = "".join(self.matrix).count("C")
+
+        directions = []
+        for d in full_cycle:
+            self._move_char_in_direction(0, d)
+            directions.append(d)
+            self.check_pacman_collected_coin()
+
+            if len(self.coins) == total_coins:
+                break
+
+        print(directions)
+        return directions
+
     def _move_char_in_direction(self, ci, direction):
         assert 0 <= ci < len(self.pos)
 
@@ -121,6 +139,19 @@ class Game:
         else:
             raise ValueError(f"invalid direction: {direction}")
         return row, col
+
+    def _valid_neighbors_row_col(self, r, c):
+        # up, right, down, left neighbors without walls
+        neighbors = []
+        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            # check bounds
+            if (
+                0 <= r + dr < self.n
+                and 0 <= c + dc < self.n
+                and self.matrix[r + dr][c + dc] != "W"
+            ):
+                neighbors.append((r + dr, c + dc))
+        return neighbors
 
     def _diagnostic(self):
         print(f"{self.pos=}")
