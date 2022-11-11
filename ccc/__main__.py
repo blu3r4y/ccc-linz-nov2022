@@ -9,22 +9,41 @@ from .contest import solve
 def load(data):
     n = int(data[0])
     matrix = data[1 : n + 1]
-    pacman = tuple(map(int, data[n + 1].split()))
-    seqlen = int(data[n + 2])
-    movement = data[n + 3]
+
+    pacman_pos = tuple(map(int, data[n + 1].split()))
+    pacman_seq_len = int(data[n + 2])
+    pacman_movement = data[n + 3]
+
+    ghosts_num = int(data[n + 4])
+    ghosts = []
+    for g in range(ghosts_num):
+        ghost_pos = tuple(map(int, data[n + 5 + g * 3].split()))
+        ghost_seq_len = int(data[n + 6 + g * 3])
+        ghost_movement = data[n + 7 + g * 3]
+        ghosts.append(
+            {
+                "ghostRow": ghost_pos[0],
+                "ghostColumn": ghost_pos[1],
+                "sequenceLengthGhosts": ghost_seq_len,
+                "movementGhosts": ghost_movement,
+            }
+        )
+
     return {
         "N": n,
         "boardMatrix": matrix,
-        "pacmanRow": pacman[0],
-        "pacmanColumn": pacman[1],
-        "sequenceLength": seqlen,
-        "movement": movement,
+        "pacmanRow": pacman_pos[0],
+        "pacmanColumn": pacman_pos[1],
+        "sequenceLengthPacman": pacman_seq_len,
+        "movementPacman": pacman_movement,
+        "numberOfGhosts": ghosts_num,
+        "ghosts": ghosts,
     }
 
 
 if __name__ == "__main__":
-    level, quests = 2, 5
-    for quest in range(quests + 1):
+    level, quests = 3, 7
+    for quest in [7]:# range(quests + 1):
         base_path = Path("data")
         input_file = base_path / f"level{level}_{quest}.in"
         output_file = input_file.with_suffix(".out")
